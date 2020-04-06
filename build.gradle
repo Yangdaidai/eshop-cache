@@ -55,7 +55,8 @@ repositories {
 test {
     useJUnitPlatform()
 }
-test.enabled(false)
+
+test.enabled=false
 
 ext {
     lombokVersion = "1.18.12"
