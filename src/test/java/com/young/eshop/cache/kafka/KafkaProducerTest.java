@@ -1,5 +1,6 @@
 package com.young.eshop.cache.kafka;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
@@ -10,6 +11,7 @@ import javax.annotation.Resource;
 
 
 
+@Ignore
 @SpringBootTest
 @RunWith(SpringRunner.class)
 class KafkaProducerTest {
