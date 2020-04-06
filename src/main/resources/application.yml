@@ -1,6 +1,57 @@
+server:
+  port: 8082
+
 spring:
   application:
-    name: cache
-  profiles:
-    active: dev
+    name: eshop-cache
 
+  datasource:
+    url: jdbc:mysql://192.168.0.113:3306/eshop?useSSL=false&characterEncoding=utf-8&serverTimezone=UTC
+    username: eshop
+    password: eshop
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      connection-test-query:  select 'x' from dual
+  cache:
+    ehcache:
+      config: ehcache.xml
+
+  redis:
+    cluster:
+      nodes:
+        - 192.168.0.110:7001
+        - 192.168.0.111:7003
+        - 192.168.0.112:7005
+        - 192.168.0.112:7006
+    timeout: 5000
+
+    lettuce:
+      pool:
+        max-active: 1000
+
+  kafka:
+    bootstrap-servers:
+      - 192.168.0.110:9092
+      - 192.168.0.111:9092
+      - 192.168.0.112:9092
+
+    listener:
+      missing-topics-fatal: false
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-commit-interval: 1000
+
+
+########自定义kafka信息##########
+kafka:
+  topic:
+    group-id: topicGroupId
+    topic-name:
+      - topic1
+      - topic2
+      - topic3
