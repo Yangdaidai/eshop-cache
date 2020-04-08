@@ -2,7 +2,6 @@ package com.young.eshop.cache.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;

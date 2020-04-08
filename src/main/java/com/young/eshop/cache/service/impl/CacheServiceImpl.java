@@ -50,27 +50,13 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void saveProduct2RedisCache(Product product) {
         ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            String value = objectMapper.writeValueAsString(product);
-            operations.set(KEY_PREFIX + product.getId(), value);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+            operations.set(KEY_PREFIX + product.getId(), product);
     }
 
     @Override
     public Product getProductFromRedisCache(Integer id) {
         ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
-        String data = (String) operations.get(KEY_PREFIX + id);
-        ObjectMapper objectMapper = new ObjectMapper();
-        Product product = null;
-        try {
-            product = objectMapper.readValue(Objects.requireNonNull(data), Product.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return product;
+        return (Product) operations.get(KEY_PREFIX + id);
     }
 
     @Override
