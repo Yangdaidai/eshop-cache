@@ -1,10 +1,19 @@
 package com.young.eshop.cache.service.impl;
 
-import com.young.eshop.cache.model.ProductInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.young.eshop.cache.model.Product;
+import com.young.eshop.cache.repository.ProductRepository;
 import com.young.eshop.cache.service.CacheService;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
@@ -16,14 +25,58 @@ import org.springframework.stereotype.Service;
 public class CacheServiceImpl implements CacheService {
 
     public static final String CACHE_NAME = "local";
+    public static final String KEY_PREFIX = "product:";
+
+    @Resource
+    private RedisTemplate<Serializable, Object> redisTemplate;
+
+    @Resource
+    private ProductRepository productRepository;
 
     /**
      * 将商品信息保存到本地缓存中
      *
-     * @param productInfo 商品信息
+     * @param product 商品信息
      */
-    @CachePut(value = CACHE_NAME, key = "'key_'+#productInfo.getId()")
-    public void saveLocalCache(ProductInfo productInfo) {
+    @CachePut(value = CACHE_NAME, key = "'key_'+#product.getId()")
+    public void saveProduct2LocalCache(Product product) {
+    }
+
+    /**
+     * 将商品信息保存到redis缓存中
+     *
+     * @param product 商品信息
+     */
+    @Override
+    public void saveProduct2RedisCache(Product product) {
+        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String value = objectMapper.writeValueAsString(product);
+            operations.set(KEY_PREFIX + product.getId(), value);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Product getProductFromRedisCache(Integer id) {
+        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+        String data = (String) operations.get(KEY_PREFIX + id);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Product product = null;
+        try {
+            product = objectMapper.readValue(Objects.requireNonNull(data), Product.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return product;
+    }
+
+    @Override
+    public Product getProduct(Integer id) {
+        return productRepository.getOne(id);
+
     }
 
     /**
@@ -32,9 +85,11 @@ public class CacheServiceImpl implements CacheService {
      * @param id id
      * @return null
      */
+    @Override
     @Cacheable(value = CACHE_NAME, key = "'key_'+#id")
-    public ProductInfo getLocalCache(Long id) {
+    public Product getLocalCache(Integer id) {
         return null;
     }
+
 
 }

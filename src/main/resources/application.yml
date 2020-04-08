@@ -12,9 +12,19 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
       connection-test-query:  select 'x' from dual
+
   cache:
     ehcache:
       config: ehcache.xml
+
+  jpa:
+    database: MYSQL
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+
 
   redis:
     cluster:

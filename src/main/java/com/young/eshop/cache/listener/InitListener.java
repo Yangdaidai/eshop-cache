@@ -1,5 +1,6 @@
 package com.young.eshop.cache.listener;
 
+import com.young.eshop.cache.rebuild.RebuildCacheThread;
 import com.young.eshop.cache.zookeeper.ZKDistributedLock;
 import com.young.eshop.cache.zookeeper.ZooKeeperSession;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +28,7 @@ public class InitListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent sce) {
 
-//        new Thread(new RebuildCacheThread()).start();
-
-        ZooKeeperSession.init();
+        new Thread(new RebuildCacheThread()).start();
         ZKDistributedLock.init();
         log.info("ZKDistributedLock init ...");
     }

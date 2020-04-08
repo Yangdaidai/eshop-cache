@@ -56,7 +56,7 @@ public class ZooKeeperSession {
 	 * 获取分布式锁
 	 * @param productId
 	 */
-	public void acquireDistributedLock(Long productId) {
+	public void acquireDistributedLock(Integer productId) {
 		String path = "/product-lock-" + productId;
 	
 		try {
@@ -88,7 +88,7 @@ public class ZooKeeperSession {
 	 * 释放掉一个分布式锁
 	 * @param productId
 	 */
-	public void releaseDistributedLock(Long productId) {
+	public void releaseDistributedLock(Integer productId) {
 		String path = "/product-lock-" + productId;
 		try {
 			zookeeper.delete(path, -1); 
