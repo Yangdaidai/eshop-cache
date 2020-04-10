@@ -57,7 +57,6 @@ spring:
       auto-commit-interval: 1000
 
 
-
 ########自定义kafka信息##########
 kafka:
   topic:
