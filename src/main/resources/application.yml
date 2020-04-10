@@ -57,7 +57,7 @@ spring:
       auto-commit-interval: 1000
 
 
-########自定义kafka信息##########
+########自定义 kafka 信息##########
 kafka:
   topic:
     group-id: topicGroupId
